@@ -1,0 +1,67 @@
+[
+  {
+    "Atomic number": 1,
+    "Symbol": "H",
+    "Name": "Hydrogen"
+  },
+  {
+    "Atomic number": 2,
+    "Symbol": "He",
+    "Name": "Helium"
+  },
+  {
+    "Atomic number": 3,
+    "Symbol": "Li",
+    "Name": "Lithium"
+  },
+  {
+    "Atomic number": 4,
+    "Symbol": "Be",
+    "Name": "Beryllium"
+  },
+  {
+    "Atomic number": 5,
+    "Symbol": "B",
+    "Name": "Boron"
+  },
+  {
+    "Atomic number": 6,
+    "Symbol": "C",
+    "Name": "Carbon"
+  },
+  {
+    "Atomic number": 7,
+    "Symbol": "N",
+    "Name": "Nitrogen"
+  },
+  {
+    "Atomic number": 8,
+    "Symbol": "O",
+    "Name": "Oxygen"
+  },
+  {
+    "Atomic number": 9,
+    "Symbol": "F",
+    "Name": "Fluorine"
+  },
+  {
+    "Atomic number": 10,
+    "Symbol": "Ne",
+    "Name": "Neon"
+  },
+  {
+    "Atomic number": 11,
+    "Symbol": "Na",
+    "Name": "Sodium"
+  },
+  {
+    "Atomic number": 12,
+    "Symbol": "Mg",
+    "Name": "Magnesium"
+  },
+  {
+    "Atomic number": 13,
+    "Symbol": "Al",
+    "Name": "Aluminium"
+  }
+]
