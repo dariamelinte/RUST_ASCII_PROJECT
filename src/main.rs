@@ -1,5 +1,9 @@
 use clap::Parser;
 use std::path::Path;
+// use serde_derive::{Serialize, Deserialize};
+use csv::Reader;
+use std::fs;
+// use std::io::Read;
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -17,7 +21,6 @@ struct Args {
     alignment: String,
 }
 
-
 fn is_json(file: &str) -> bool {
     let path = Path::new(file);
     match path.extension() {
@@ -34,12 +37,44 @@ fn is_csv(file: &str) -> bool {
     }
 }
 
+
 fn create_from_json() {
     println!("hello json");
+
+    let args = Args::parse();
+    println!("output file: {}", args.output_file);
+    println!("alignment: {}", args.alignment);
+    println!("separated: {}", args.separated);
 }
 
-fn create_from_csv() {
+fn create_from_csv()-> Result<(), std::io::Error> {
     println!("hello csv");
+
+    let args = Args::parse();
+    println!("output file: {}", args.output_file);
+    println!("alignment: {}", args.alignment);
+    println!("separated: {}", args.separated);
+
+    let file = fs::File::open(args.input_file)?;
+    let mut rdr = Reader::from_reader(file);
+
+
+    let mut data = vec![];
+    let headers = rdr.headers().unwrap();
+    data.push(headers.iter().map(|f| f.to_owned()).collect::<Vec<_>>());
+
+    for result in rdr.records() {
+        let record = result?;
+        data.push(record.iter().map(|f| f.to_owned()).collect::<Vec<_>>());
+    }
+    println!("{:?}", data);
+
+    for result in rdr.records() {
+        let record = result?;
+        println!("{:?}", record);
+    }
+
+    Ok(())
 }
 
 fn main() {
