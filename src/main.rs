@@ -2,8 +2,8 @@ use clap::Parser;
 use std::path::Path;
 // use serde_derive::{Serialize, Deserialize};
 use csv::Reader;
-use std::fs;
-// use std::io::Read;
+use std::fs::File;
+use std::io::Write;
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -37,8 +37,19 @@ fn is_csv(file: &str) -> bool {
     }
 }
 
-fn create_separator_line() -> String {
-    let mut s: String;
+fn create_separator_line(max_len_col: Vec<usize>) -> String {
+    let mut s: String = String::new();
+
+    for leng in max_len_col {
+        s += "+-";
+        println!("{}", leng);
+        for i in 0..leng {
+            s += "-";
+        }
+    }
+    s += "+\n";
+
+    return s;
 }
 
 
@@ -59,7 +70,7 @@ fn create_from_csv()-> Result<(), std::io::Error> {
     println!("alignment: {}", args.alignment);
     println!("separated: {}", args.separated);
 
-    let file = fs::File::open(args.input_file)?;
+    let file = File::open(args.input_file)?;
     let mut rdr = Reader::from_reader(file);
 
     let mut data = vec![];
@@ -83,9 +94,10 @@ fn create_from_csv()-> Result<(), std::io::Error> {
     }
 
     println!("{:?}", max_len_col);
+    let sep: String = create_separator_line(max_len_col);
     
-    let mut file_out = File::create(path_out)?;
-    
+    let mut file_out = File::create(args.output_file)?;
+    file_out.write_all(sep.as_bytes())?;
 
     Ok(())
 }
