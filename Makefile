@@ -4,6 +4,9 @@ run_json:
 run_csv:
 	cargo run -- --inputFile "./example.csv" --outputFile "./result.txt"
 
+run_wrong:
+	cargo run -- --inputFile "./example.txt" --outputFile "./result.txt"
+
 run_separated: 
 	cargo run -- --inputFile "./example.json" --outputFile "./result.txt" --separated
 
