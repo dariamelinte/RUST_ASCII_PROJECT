@@ -37,6 +37,10 @@ fn is_csv(file: &str) -> bool {
     }
 }
 
+fn create_separator_line() -> String {
+    let mut s: String;
+}
+
 
 fn create_from_json() {
     println!("hello json");
@@ -58,21 +62,30 @@ fn create_from_csv()-> Result<(), std::io::Error> {
     let file = fs::File::open(args.input_file)?;
     let mut rdr = Reader::from_reader(file);
 
-
     let mut data = vec![];
+    let mut max_len_col = vec![];
     let headers = rdr.headers().unwrap();
     data.push(headers.iter().map(|f| f.to_owned()).collect::<Vec<_>>());
-
     for result in rdr.records() {
         let record = result?;
         data.push(record.iter().map(|f| f.to_owned()).collect::<Vec<_>>());
     }
-    println!("{:?}", data);
 
-    for result in rdr.records() {
-        let record = result?;
-        println!("{:?}", record);
+    for result in data {
+        println!("{:?}", result);
+        for (i, field) in result.iter().enumerate() {
+            if i >= max_len_col.len() {
+                max_len_col.push(field.len());
+            } else {
+                max_len_col[i] = max_len_col[i].max(field.len());
+            }
+        }
     }
+
+    println!("{:?}", max_len_col);
+    
+    let mut file_out = File::create(path_out)?;
+    
 
     Ok(())
 }
