@@ -5,7 +5,7 @@ use csv::Reader;
 use std::fs::File;
 use std::io::Write;
 
-#[derive(Parser, Debug)]
+#[derive(Parser, Clone, Debug)]
 #[command(author, version, about, long_about = None)]
 struct Args {
     #[arg(long="inputFile")]
@@ -52,6 +52,22 @@ fn create_separator_line(max_len_col: Vec<usize>) -> String {
     return s;
 }
 
+fn create_row(max_len_col: Vec<usize>, row: Vec<String>) -> String {
+    let mut s: String = String::new();
+
+    for index in 0..row.len() {
+        let cell = &row[index];
+        let max_l = max_len_col[index];
+        s += "| ";
+        s += cell.as_str();
+        for _i in 0..(max_l - cell.len()) {
+            s += " ";
+        }
+    }
+    s += " |\n";
+
+    return s;
+}
 
 fn create_from_json() {
     println!("hello json");
@@ -60,6 +76,9 @@ fn create_from_json() {
     println!("output file: {}", args.output_file);
     println!("alignment: {}", args.alignment);
     println!("separated: {}", args.separated);
+}
+fn print_type_of<T>(_: &T) {
+    println!("{}", std::any::type_name::<T>())
 }
 
 fn create_from_csv()-> Result<(), std::io::Error> {
@@ -82,7 +101,7 @@ fn create_from_csv()-> Result<(), std::io::Error> {
         data.push(record.iter().map(|f| f.to_owned()).collect::<Vec<_>>());
     }
 
-    for result in data {
+    for result in &data {
         println!("{:?}", result);
         for (i, field) in result.iter().enumerate() {
             if i >= max_len_col.len() {
@@ -94,9 +113,19 @@ fn create_from_csv()-> Result<(), std::io::Error> {
     }
 
     println!("{:?}", max_len_col);
-    let sep: String = create_separator_line(max_len_col);
+    let sep: String = create_separator_line(max_len_col.clone());
     
     let mut file_out = File::create(args.output_file)?;
+    file_out.write_all(sep.as_bytes())?;
+
+    for index in 0..data.len() {
+        let result = &data[index];
+        file_out.write_all(create_row(max_len_col.clone(), result.to_vec()).as_bytes())?;
+        
+        if index == 0 {
+            file_out.write_all(sep.as_bytes())?;
+        }
+    }
     file_out.write_all(sep.as_bytes())?;
 
     Ok(())
