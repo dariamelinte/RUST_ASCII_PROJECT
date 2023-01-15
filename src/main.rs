@@ -43,7 +43,7 @@ fn create_separator_line(max_len_col: Vec<usize>) -> String {
     for leng in max_len_col {
         s += "+-";
         println!("{}", leng);
-        for i in 0..leng {
+        for _i in 0..leng {
             s += "-";
         }
     }
@@ -52,8 +52,13 @@ fn create_separator_line(max_len_col: Vec<usize>) -> String {
     return s;
 }
 
-fn create_row(max_len_col: Vec<usize>, row: Vec<String>) -> String {
+fn create_row(max_len_col: Vec<usize>, row: Vec<String>, separated_string: String) -> String {
     let mut s: String = String::new();
+
+    let args = Args::parse();
+    println!("output file: {}", args.output_file);
+    println!("alignment: {}", args.alignment);
+    println!("separated: {}", args.separated);
 
     for index in 0..row.len() {
         let cell = &row[index];
@@ -65,6 +70,10 @@ fn create_row(max_len_col: Vec<usize>, row: Vec<String>) -> String {
         }
     }
     s += " |\n";
+
+    if args.separated {
+        s += &separated_string;
+    }
 
     return s;
 }
@@ -82,12 +91,7 @@ fn print_type_of<T>(_: &T) {
 }
 
 fn create_from_csv()-> Result<(), std::io::Error> {
-    println!("hello csv");
-
     let args = Args::parse();
-    println!("output file: {}", args.output_file);
-    println!("alignment: {}", args.alignment);
-    println!("separated: {}", args.separated);
 
     let file = File::open(args.input_file)?;
     let mut rdr = Reader::from_reader(file);
@@ -116,17 +120,19 @@ fn create_from_csv()-> Result<(), std::io::Error> {
     let sep: String = create_separator_line(max_len_col.clone());
     
     let mut file_out = File::create(args.output_file)?;
-    file_out.write_all(sep.as_bytes())?;
+    file_out.write_all(&sep.as_bytes())?;
 
     for index in 0..data.len() {
         let result = &data[index];
-        file_out.write_all(create_row(max_len_col.clone(), result.to_vec()).as_bytes())?;
+        file_out.write_all(create_row(max_len_col.clone(), result.to_vec(), sep.clone()).as_bytes())?;
         
-        if index == 0 {
-            file_out.write_all(sep.as_bytes())?;
+        if index == 0 && !args.separated {
+            file_out.write_all(&sep.as_bytes())?;
         }
     }
-    file_out.write_all(sep.as_bytes())?;
+    if !args.separated {
+        file_out.write_all(&sep.as_bytes())?;
+    }
 
     Ok(())
 }
