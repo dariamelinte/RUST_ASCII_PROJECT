@@ -42,7 +42,6 @@ fn create_separator_line(max_len_col: Vec<usize>) -> String {
 
     for leng in max_len_col {
         s += "+-";
-        println!("{}", leng);
         for _i in 0..leng {
             s += "-";
         }
@@ -54,11 +53,7 @@ fn create_separator_line(max_len_col: Vec<usize>) -> String {
 
 fn create_row(max_len_col: Vec<usize>, row: Vec<String>, separated_string: String) -> String {
     let mut s: String = String::new();
-
     let args = Args::parse();
-    println!("output file: {}", args.output_file);
-    println!("alignment: {}", args.alignment);
-    println!("separated: {}", args.separated);
 
     for index in 0..row.len() {
         let cell = &row[index];
@@ -112,9 +107,6 @@ fn create_from_json() {
     println!("alignment: {}", args.alignment);
     println!("separated: {}", args.separated);
 }
-fn print_type_of<T>(_: &T) {
-    println!("{}", std::any::type_name::<T>())
-}
 
 fn create_from_csv() -> Result<(), std::io::Error> {
     let args = Args::parse();
@@ -132,7 +124,6 @@ fn create_from_csv() -> Result<(), std::io::Error> {
     }
 
     for result in &data {
-        println!("{:?}", result);
         for (i, field) in result.iter().enumerate() {
             if i >= max_len_col.len() {
                 max_len_col.push(field.len());
@@ -142,7 +133,6 @@ fn create_from_csv() -> Result<(), std::io::Error> {
         }
     }
 
-    println!("{:?}", max_len_col);
     let sep: String = create_separator_line(max_len_col.clone());
 
     let mut file_out = File::create(args.output_file)?;
@@ -180,6 +170,6 @@ fn main() {
     if is_json(file) {
         create_from_json();
     } else {
-        create_from_csv();
+        let _r = create_from_csv();
     }
 }
