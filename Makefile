@@ -2,7 +2,7 @@ run_json:
 	cargo run -- --inputFile "./example.json" --outputFile "./result.txt"
 
 run_csv:
-	cargo run -- --inputFile "./example.csv" --outputFile "./result.txt"
+	cargo run -- --inputFile "./example.csv" --outputFile "./result.txt" --alignment "right" --separated
 
 run_wrong:
 	cargo run -- --inputFile "./example.txt" --outputFile "./result.txt"
